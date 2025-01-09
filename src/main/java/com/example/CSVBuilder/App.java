@@ -15,8 +15,8 @@ public class App {
 	public static void main(String[] args) {
 
 		try {
-			String username = "";//Provide User name
-			String password = "";// Provide Password
+			String username = "TBOStaticAPITest";//Provide User name
+			String password = "Tbo@11530818";// Provide Password
 
 			// Combine username and password with a colon
 			String credentials = username + ":" + password;
@@ -51,7 +51,6 @@ public class App {
 				// Call the TBOHotelCodeList API to fetch hotel details
 				String hotelDetailsApiUrl = "http://api.tbotechnology.in/TBOHolidays_HotelAPI/TBOHotelCodeList";
 				String hotelDetailsResponse = fetchHotelDataWithRetry(hotelDetailsApiUrl, cityCode, authHeader, true);
-				String hotelDetailsResponse1 = fetchHotelDataWithRetry(hotelDetailsApiUrl, cityCode, authHeader, false);
 
 				if (hotelDetailsResponse != null && !hotelDetailsResponse.contains("\"Hotels\": []")) {
 					// Save hotel details to the individual city CSV
@@ -376,8 +375,9 @@ public class App {
 					String gallopId = null;
 					if (hotel.has("GallopId")) {
 						gallopId = hotel.get("GallopId").getAsString();
+						entry.append(gallopId);
 					}
-					appendColumnValue(entry, gallopId);
+					
 
 		            commonWriter.append(entry.toString()).append("\n");
 		        }
@@ -597,8 +597,8 @@ public class App {
 
 					if (hotel.has("GallopId")) {
 						gallopId = hotel.get("GallopId").getAsString();
+						entry.append(gallopId);
 					}
-					appendColumnValue(entry, gallopId);
 
 					cityWriter.append(entry.toString() + "\n");
 
