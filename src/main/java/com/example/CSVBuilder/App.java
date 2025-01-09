@@ -15,8 +15,8 @@ public class App {
 	public static void main(String[] args) {
 
 		try {
-			String username = "TBOStaticAPITest";
-			String password = "Tbo@11530818";
+			String username = "";//Provide User name
+			String password = "";// Provide Password
 
 			// Combine username and password with a colon
 			String credentials = username + ":" + password;
