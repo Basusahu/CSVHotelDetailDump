@@ -67,7 +67,7 @@ public class App {
 	                    saveHotelsToCsv(hotelDetailsResponse, cityName);
 
 	                    // Save hotel details to the common CSV
-	                    saveToCommonCsv(hotelDetailsResponse, cityName, commonWriter);
+	                    saveToCommonCsv(hotelDetailsResponse, commonWriter);
 	                } else {
 	                    System.out.println("No hotels found for city: " + cityName + ", retrying with IsDetailedResponse=false");
 
@@ -86,7 +86,7 @@ public class App {
 	                    saveHotelsToCsv(hotelDetailsResponse, cityName);
 
 	                    // Save hotel details to the common CSV
-	                    saveToCommonCsv(hotelDetailsResponse, cityName, commonWriter);
+	                    saveToCommonCsv(hotelDetailsResponse, commonWriter);
 	                }
 	            }
 	        }
@@ -174,7 +174,7 @@ private static String fetchHotelData(String apiUrl, String cityCode, String auth
 }
 
 // Save hotel data to the common CSV file
-private static void saveToCommonCsv(String hotelDetailsResponse, String cityName, FileWriter commonWriter) throws IOException {
+private static void saveToCommonCsv(String hotelDetailsResponse, FileWriter commonWriter) throws IOException {
 	Gson gson = new Gson();
 	JsonObject hotelDetailsJson = gson.fromJson(hotelDetailsResponse, JsonObject.class);
 
@@ -187,7 +187,7 @@ private static void saveToCommonCsv(String hotelDetailsResponse, String cityName
 		// Iterate over all hotels and write to CSV
 		for (int i = 0; i < hotels.size(); i++) {
 			JsonObject hotel = hotels.get(i).getAsJsonObject();
-			StringBuffer res = hotelData(cityName, hotel);
+			StringBuffer res = hotelData( hotel);
 
 			// Write hotel data to the common CSV
 			commonWriter.append(res.toString()).append("\n");
@@ -213,7 +213,7 @@ private static void saveHotelsToCsv(String hotelDetailsResponse, String cityName
 			// Iterate over all hotels and save them to the individual city CSV
 			for (int i = 0; i < hotels.size(); i++) {
 				JsonObject hotel = hotels.get(i).getAsJsonObject();
-				StringBuffer res = hotelData(cityName, hotel);
+				StringBuffer res = hotelData( hotel);
 				cityWriter.append(res.toString()).append("\n");
 			}
 			cityWriter.close();
@@ -224,7 +224,7 @@ private static void saveHotelsToCsv(String hotelDetailsResponse, String cityName
 }
 
 
-public static StringBuffer hotelData(String cityName, JsonObject hotel) {
+public static StringBuffer hotelData( JsonObject hotel) {
 	StringBuffer entry = new StringBuffer();
 
 
@@ -235,8 +235,7 @@ public static StringBuffer hotelData(String cityName, JsonObject hotel) {
 	entry.append(hotel.has("Address") ? hotel.get("Address").getAsString() : "").append("||");
 	entry.append(hotel.has("Category") ? hotel.get("Category").getAsString() : "").append("||");
 	entry.append(hotel.has("ChainName") ? hotel.get("ChainName").getAsString() : "").append("||");
-	Object city = null;
-	entry.append((city != null ? city : cityName)).append("||");
+	entry.append(hotel.has("CityName") ? hotel.get("CityName").getAsString() : "").append("||");
 	entry.append(hotel.has("CountryName") ? hotel.get("CountryName").getAsString() : "").append("||");
 	entry.append(hotel.has("created") ? hotel.get("created").getAsString() : "").append("||");
 	entry.append(hotel.has("googleAddress") ? hotel.get("googleAddress").getAsString() : "").append("||");
@@ -260,7 +259,7 @@ public static StringBuffer hotelData(String cityName, JsonObject hotel) {
 	entry.append(latitude != null ? latitude : "").append("||");
 	entry.append(longitude != null ? longitude : "").append("||");
 
-	entry.append(hotel.has("PhoneNumber") ? hotel.get("PhoneNumber").getAsString() : "").append("||");
+	entry.append( hotel.has("PhoneNumber") ? (hotel.get("PhoneNumber").getAsString() != null  ? hotel.get("PhoneNumber").getAsString().split("\\|")[0].trim()  : "")   : "").append("||");
 	entry.append(hotel.has("PinCode") ? hotel.get("PinCode").getAsString() : "").append("||");
 	entry.append(hotel.has("State") ? hotel.get("State").getAsString() : "").append("||");
 	entry.append(hotel.has("updated") ? hotel.get("updated").getAsString() : "").append("||");
